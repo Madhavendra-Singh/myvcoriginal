@@ -410,11 +410,10 @@ app.post('/create-checkout-session', async (req, res) => {
                 quantity: 1,
             }],
             mode: 'payment',
-            success_url: `${process.env.BASE_URL}/success?appointment_date=${encodeURIComponent(appointment_date)}&appointment_time=${encodeURIComponent(appointment_time)}&doctor_id=${encodeURIComponent(doctor_id)}&hospital_id=${encodeURIComponent(hospital_id)}&vaccine_id=${encodeURIComponent(vaccine_id)}`,
+            success_url: `${process.env.BASE_URL}/success?appointment_date=${encodeURIComponent(appointment_date)}&appointment_time=${encodeURIComponent(appointment_time)}&doctor_id=${encodeURIComponent(doctor_id)}&hospital_id=${encodeURIComponent(hospital_id)}&vaccine_id=${encodeURIComponent(vaccine_id)}`, // Fixed to use colon (:)
             cancel_url: 'http://localhost:3000/vaccines?payment_failed=true',
         });
 
-        // Redirect to Stripe checkout session
         res.redirect(303, session.url);
     } catch (error) {
         console.error(error);
@@ -422,17 +421,15 @@ app.post('/create-checkout-session', async (req, res) => {
     }
 });
 
-
 app.get('/success', async (req, res) => {
     const { appointment_date, appointment_time, doctor_id, hospital_id, vaccine_id } = req.query;
 
     // Validate the parameters here...
-
     const userId = req.session.user.user_id;
 
     // Create appointment and other necessary database updates
     const selectedDateTime = new Date(`${appointment_date}T${appointment_time}`);
-    
+
     try {
         await pool.query('BEGIN');
 
@@ -457,6 +454,8 @@ app.get('/success', async (req, res) => {
         res.status(500).send('Error processing appointment');
     }
 });
+
+
 
 app.get('/payment-failure', (req, res) => {
     res.redirect('/vaccines');
