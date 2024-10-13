@@ -410,7 +410,7 @@ app.post('/create-checkout-session', async (req, res) => {
                 quantity: 1,
             }],
             mode: 'payment',
-            success_url: `${process.env.BASE_URL}/success?appointment_date=${encodeURIComponent(appointment_date)}&appointment_time=${encodeURIComponent(appointment_time)}&doctor_id=${encodeURIComponent(doctor_id)}&hospital_id=${encodeURIComponent(hospital_id)}&vaccine_id=${encodeURIComponent(vaccine_id)}`, // Fixed to use colon (:)
+            success_url: `https://vaccineconnect.vercel.app/success?appointment_date=${encodeURIComponent(appointment_date)}&appointment_time=${encodeURIComponent(appointment_time)}&doctor_id=${encodeURIComponent(doctor_id)}&hospital_id=${encodeURIComponent(hospital_id)}&vaccine_id=${encodeURIComponent(vaccine_id)}`, // Fixed to use colon (:)
             cancel_url: 'http://localhost:3000/vaccines?payment_failed=true',
         });
 
