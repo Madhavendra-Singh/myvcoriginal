@@ -9,7 +9,7 @@ const fs = require('fs');
 const multer = require('multer'); // Import multer
 const path = require('path');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-const bcrypt = require('bcrypt'); // If you're using hashed passwords
+const bcrypt = require('bcryptjs'); // If you're using hashed passwords
 
 const app = express();
 const PORT = 3000;
