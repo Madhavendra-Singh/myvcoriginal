@@ -409,39 +409,34 @@ app.post('/create-appointment', async (req, res) => {
     }
 });
 
-app.get('/success', async (req, res) => {
-    const { appointment_date, appointment_time, doctor_id, hospital_id, vaccine_id } = req.query;
+app.get('/review', async (req, res) => {
+    const { appointment_id } = req.query;
 
-    // Validate the parameters here...
-    const userId = req.session.user.user_id;
-
-    // Create appointment and other necessary database updates
-    const selectedDateTime = new Date(`${appointment_date}T${appointment_time}`);
+    // Fetch appointment details to display in the review page
+    const appointmentQuery = `
+        SELECT A.appointment_id, A.appointment_date, D.name AS doctor_name, H.name AS hospital_name, V.name AS vaccine_name
+        FROM Appointments A
+        JOIN Doctors D ON A.doctor_id = D.doctor_id
+        JOIN Hospitals H ON A.hospital_id = H.hospital_id
+        JOIN Vaccines V ON A.vaccine_id = V.vaccine_id
+        WHERE A.appointment_id = $1;
+    `;
     
     try {
-        await pool.query('BEGIN');
+        const appointmentResult = await pool.query(appointmentQuery, [appointment_id]);
+        if (appointmentResult.rows.length === 0) {
+            return res.status(404).send('Appointment not found.');
+        }
 
-        // Insert the appointment into the database
-        const appointmentInsertQuery = `
-            INSERT INTO Appointments (user_id, doctor_id, vaccine_id, hospital_id, appointment_date, status) 
-            VALUES ($1, $2, $3, $4, $5, 'confirmed')
-            RETURNING appointment_id;
-        `;
-        const appointmentResult = await pool.query(appointmentInsertQuery, [userId, doctor_id, vaccine_id, hospital_id, selectedDateTime]);
-        const appointment_id = appointmentResult.rows[0].appointment_id;
-
-        // Optionally update vaccine inventory here if needed...
-
-        await pool.query('COMMIT');
-
-        // Redirect to review page with appointment_id
-        res.redirect(`/review?appointment_id=${appointment_id}`);
+        const appointment = appointmentResult.rows[0];
+        // Render your review page with appointment details
+        res.render('review', { appointment });
     } catch (error) {
-        await pool.query('ROLLBACK');
         console.error(error);
-        res.status(500).send('Error processing appointment');
+        res.status(500).send('Error fetching appointment details');
     }
 });
+
 
 
 
