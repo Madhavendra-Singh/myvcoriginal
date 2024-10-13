@@ -410,16 +410,18 @@ app.post('/create-checkout-session', async (req, res) => {
                 quantity: 1,
             }],
             mode: 'payment',
-            success_url: `http://localhost:3000/success?appointment_date=${appointment_date}&appointment_time=${appointment_time}&doctor_id=${doctor_id}&hospital_id=${hospital_id}&vaccine_id=${vaccine_id}`,
+            success_url: `${process.env.BASE_URL}/success?appointment_date=${encodeURIComponent(appointment_date)}&appointment_time=${encodeURIComponent(appointment_time)}&doctor_id=${encodeURIComponent(doctor_id)}&hospital_id=${encodeURIComponent(hospital_id)}&vaccine_id=${encodeURIComponent(vaccine_id)}`,
             cancel_url: 'http://localhost:3000/vaccines?payment_failed=true',
         });
 
+        // Redirect to Stripe checkout session
         res.redirect(303, session.url);
     } catch (error) {
         console.error(error);
         res.status(500).send('Error creating checkout session');
     }
 });
+
 
 app.get('/success', async (req, res) => {
     const { appointment_date, appointment_time, doctor_id, hospital_id, vaccine_id } = req.query;
