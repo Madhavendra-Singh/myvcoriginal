@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #e3f2fd, #f8f9fa);
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        h1 {
+            color: #2e8b57;
+            text-align: center;
+            margin-top: 20px;
+            font-weight: 600;
+            animation: fadeIn 1s ease;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: auto;
+            max-height: 80vh;
+            animation: slideIn 0.5s ease;
+        }
+
+        nav {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        nav li {
+            margin: 0 15px;
+        }
+
+        nav a {
+            padding: 10px 15px;
+            border: 1px solid #2e8b57;
+            border-radius: 25px;
+            background-color: #ffcd3c;
+            text-decoration: none;
+            color: #2e8b57;
+            font-weight: 600;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        nav a:hover {
+            background-color: #2e8b57;
+            color: white;
+            transform: scale(1.05);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            font-weight: 500;
+            color: #666;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Admin Dashboard</h1>
+        <nav>
+            <ul>
+                <li><a href="/admin/inventory">Manage Inventory</a></li>
+                <li><a href="/admin/inventory/expired">View Expired Vaccines</a></li>
+                <li><a href="/admin/reviews">Reviews</a></li>
+                <li><a href="/logout">Logout</a></li>
+            </ul>
+        </nav>
+        <footer>
+            &copy; 2024 VaccineConnect. All rights reserved.
+        </footer>
+    </div>
+</body>
+
+</html>

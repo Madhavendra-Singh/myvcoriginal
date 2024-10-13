@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Review Appointment</title>
+    <link rel="stylesheet" href="/styles.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #e3f2fd, #fff);
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        h1 {
+            color: #1a73e8;
+            text-align: center;
+            margin-top: 20px;
+            font-size: 2.5em;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+            transition: transform 0.2s;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .container:hover {
+            transform: scale(1.02);
+        }
+
+        h2,
+        h3 {
+            margin: 10px 0;
+            color: #333;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            font-weight: bold;
+        }
+
+        input[type="number"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+
+        button {
+            background-color: #1a73e8;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s;
+            font-size: 1em;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #145ab6;
+            transform: translateY(-2px);
+        }
+
+        .nav-button {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .vaccine-image {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Add animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>Review Your Appointment</h1>
+
+        <!-- Space for the vaccine image -->
+        <img src="<%= appointment.vaccine_image %>" alt="<%= appointment.vaccine_name %>" class="vaccine-image">
+
+        <h2>Vaccine: <%= appointment.vaccine_name %>
+        </h2>
+        <h3>Hospital: <%= appointment.hospital_name %>
+        </h3>
+        <h3>Doctor: <%= appointment.doctor_name %>
+        </h3>
+
+        <form action="/submit-review" method="POST">
+            <input type="hidden" name="hospital_id" value="<%= appointment.hospital_id %>">
+            <input type="hidden" name="doctor_id" value="<%= appointment.doctor_id %>">
+
+            <label for="rating">Rating (1-5):</label>
+            <input type="number" name="rating" min="1" max="5" required>
+
+            <label for="review_text">Review:</label>
+            <textarea name="review_text" rows="5" required></textarea>
+
+            <button type="submit">Submit Review</button>
+        </form>
+
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vaccine Inventory</title>
+    <link rel="stylesheet" href="/styles.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        nav {
+            width: 100%;
+            background-color: #2e8b57;
+            padding: 15px 0;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        nav ul {
+            display: flex;
+            justify-content: center;
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        nav ul li {
+            margin: 0 15px;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.1em;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        nav ul li a:hover {
+            color: #ffcd3c;
+        }
+
+        h1 {
+            color: #2e8b57;
+            text-align: center;
+            margin-top: 20px;
+            font-weight: 600;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+        .vaccine-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            list-style-type: none;
+            padding: 0;
+            margin: 20px 0;
+        }
+
+        .vaccine-item {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            overflow: hidden;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .vaccine-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .vaccine-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: contain;
+            margin-bottom: 10px;
+        }
+
+        .vaccine-details {
+            margin: 10px 0;
+        }
+
+        .vaccine-details strong {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 1.2em;
+            color: #2e8b57;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            margin-top: 10px;
+        }
+
+        label {
+            margin: 5px 0 2px;
+            font-weight: 500;
+        }
+
+        input[type="date"],
+        input[type="time"] {
+            margin-bottom: 10px;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            font-size: 1em;
+        }
+
+        input[type="date"]:focus,
+        input[type="time"]:focus {
+            border-color: #2e8b57;
+            outline: none;
+            box-shadow: 0 0 5px rgba(46, 139, 87, 0.5);
+        }
+
+        /* Custom styles for date and time inputs */
+        .custom-date,
+        .custom-time {
+            position: relative;
+        }
+
+        .custom-date input,
+        .custom-time input {
+            width: 100%;
+            height: 40px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background: #f9f9f9;
+            font-size: 1em;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .custom-date input:focus,
+        .custom-time input:focus {
+            border-color: #2e8b57;
+            outline: none;
+            box-shadow: 0 0 5px rgba(46, 139, 87, 0.5);
+        }
+
+        button {
+            background-color: #ffcd3c;
+            color: #2e8b57;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            font-weight: 600;
+            font-size: 1em;
+        }
+
+        button:hover {
+            background-color: #ffb320;
+            transform: scale(1.05);
+        }
+
+        .nav-buttons {
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation Bar -->
+    <nav>
+        <ul>
+            <li><a href="/vaccines">Home</a></li>
+            <li><a href="/my-appointments">Appointments</a></li>
+            <li><a href="/notifications">Notifications</a></li>
+            <li><a href="/profile">Profile</a></li>
+            <li><a href="/insurance">Insurance</a></li>
+            <li><a href="/vaccine-info">Vaccine Awareness</a></li>
+            <li><a href="/logout">Logout</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <h1>Vaccine Inventory</h1>
+        <ul class="vaccine-list">
+            <% vaccines.forEach(vaccine=> { %>
+                <li class="vaccine-item">
+                    <img src="<%= vaccine.image_url %>" alt="<%= vaccine.vaccine_name %> image"
+                        onerror="this.src='/images/default-vaccine-icon.png';">
+                    <div class="vaccine-details">
+                        <strong>
+                            <%= vaccine.vaccine_name %>
+                        </strong>
+                        Available: <%= vaccine.stock_quantity %> - Price: ₹<%= vaccine.price %>
+                    </div>
+                    <form action="/create-checkout-session" method="POST">
+                        <input type="hidden" name="vaccine_id" value="<%= vaccine.vaccine_id %>">
+                        <input type="hidden" name="hospital_id" value="<%= hospitalId %>">
+                        <input type="hidden" name="doctor_id" value="<%= doctorId %>">
+                        <label for="appointment_date">Select Date:</label>
+                        <div class="custom-date">
+                            <input type="date" id="appointment_date" name="appointment_date" required>
+                        </div>
+                        <label for="appointment_time">Select Time:</label>
+                        <div class="custom-time">
+                            <input type="time" id="appointment_time" name="appointment_time" required>
+                        </div>
+                        <button type="submit">Book Appointment</button>
+                    </form>
+                </li>
+                <% }); %>
+        </ul>
+
+    </div>
+</body>
+
+</html>

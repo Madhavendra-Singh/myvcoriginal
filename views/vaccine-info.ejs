@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vaccine Information - VaccineConnect</title>
+    <link rel="stylesheet" href="/styles.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #e3f2fd, #f1f8e9);
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        nav {
+            width: 100%;
+            background-color: #4caf50;
+            padding: 15px 0;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        nav ul {
+            display: flex;
+            justify-content: center;
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        nav ul li {
+            margin: 0 20px;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.1em;
+            transition: color 0.3s ease;
+            position: relative;
+            padding: 5px;
+        }
+
+        nav ul li a:hover {
+            color: #ffeb3b;
+        }
+
+        h1 {
+            color: #4caf50;
+            font-size: 2.5em;
+            margin-top: 20px;
+        }
+
+        h2 {
+            color: #555;
+            font-size: 1.8em;
+            margin-top: 10px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            animation: fadeIn 1s ease;
+        }
+
+        #searchBar {
+            width: 100%;
+            padding: 15px;
+            margin: 20px 0;
+            font-size: 1em;
+            border: 1px solid #ccc;
+            border-radius: 25px;
+            transition: border-color 0.3s ease;
+        }
+
+        #searchBar:focus {
+            border-color: #4caf50;
+            outline: none;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        th,
+        td {
+            padding: 15px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        thead {
+            background-color: #4caf50;
+            color: white;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tbody tr:hover {
+            background-color: #e8f5e9;
+        }
+
+        th {
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 1em;
+        }
+
+        td {
+            font-size: 0.9em;
+            color: #444;
+        }
+
+        .vaccine-image {
+            width: 100px;
+            /* Fixed width for images */
+            height: auto;
+            border-radius: 10px;
+            /* Rounded corners for images */
+            transition: transform 0.3s ease;
+        }
+
+        .vaccine-image:hover {
+            transform: scale(1.1);
+            /* Scale effect on hover */
+        }
+
+        .button {
+            background-color: #4caf50;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            margin-top: 30px;
+            display: inline-block;
+        }
+
+        .button:hover {
+            background-color: #388e3c;
+            transform: translateY(-2px);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation Bar -->
+    <nav>
+        <ul>
+            <li><a href="/vaccines">Home</a></li>
+            <li><a href="/my-appointments">Appointments</a></li>
+            <li><a href="/notifications">Notifications</a></li>
+            <li><a href="/profile">Profile</a></li>
+            <li><a href="/insurance">Insurance</a></li>
+            <li><a href="/vaccine-info">Vaccine Awareness</a></li>
+            <li><a href="/logout">Logout</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <h1>Vaccine Information</h1>
+        <h2>Detailed Information about Available Vaccines</h2>
+
+        <!-- Search Input -->
+        <input type="text" id="searchBar" placeholder="Search for vaccines by name..." onkeyup="filterVaccines()">
+
+        <!-- Vaccine Information Table -->
+        <table id="vaccineTable">
+            <thead>
+                <tr>
+                    <th>Image</th> <!-- Added Image Column -->
+                    <th>Vaccine Name</th>
+                    <th>Type</th>
+                    <th>Manufacturer</th>
+                    <th>Description</th>
+                    <th>How It Works</th>
+                    <th>Side Effects</th>
+                    <th>Precautions</th>
+                    <th>Effectiveness</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% vaccines.forEach(vaccine=> { %>
+                    <tr>
+                        <td>
+                            <img src="<%= vaccine.image_url %>" alt="<%= vaccine.vaccine_name %> Image"
+                                class="vaccine-image"> <!-- Image Display -->
+                        </td>
+                        <td class="vaccine-name">
+                            <%= vaccine.vaccine_name %>
+                        </td>
+                        <td>
+                            <%= vaccine.vaccine_type %>
+                        </td>
+                        <td>
+                            <%= vaccine.manufacturer %>
+                        </td>
+                        <td>
+                            <%= vaccine.description %>
+                        </td>
+                        <td>
+                            <%= vaccine.how_it_works %>
+                        </td>
+                        <td>
+                            <%= vaccine.side_effects %>
+                        </td>
+                        <td>
+                            <%= vaccine.precautions %>
+                        </td>
+                        <td>
+                            <%= vaccine.effectiveness %>
+                        </td>
+                    </tr>
+                    <% }) %>
+            </tbody>
+        </table>
+
+    </div>
+
+    <!-- JavaScript to handle search filter -->
+    <script>
+        function filterVaccines() {
+            const input = document.getElementById('searchBar').value.toUpperCase();
+            const table = document.getElementById('vaccineTable');
+            const rows = table.getElementsByTagName('tr');
+
+            for (let i = 1; i < rows.length; i++) { // Skip the header row
+                const vaccineNameCell = rows[i].getElementsByClassName('vaccine-name')[0];
+                const vaccineName = vaccineNameCell ? vaccineNameCell.textContent.toUpperCase() : '';
+
+                if (vaccineName.indexOf(input) > -1) {
+                    rows[i].style.display = '';
+                } else {
+                    rows[i].style.display = 'none';
+                }
+            }
+        }
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Your CSS file -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Include jQuery -->
+    <style>
+        body {
+            background-color: #0d0d0d;
+            /* Very dark background */
+            color: #00ff00;
+            /* Neon green text for a "hacker" vibe */
+            font-family: 'Courier New', Courier, monospace;
+            /* Terminal-style font */
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1,
+        h2 {
+            color: #ff0066;
+            /* Neon red for headings */
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #1a1a1a;
+            /* Dark background for tables */
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.6);
+            /* Green glow effect */
+        }
+
+        th,
+        td {
+            border: 1px solid #00ff00;
+            /* Neon green border for cells */
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #0d0d0d;
+            /* Darker for headers */
+            color: #ff0066;
+        }
+
+        td {
+            color: #00ff00;
+            /* Neon green for table data */
+        }
+
+        button {
+            background-color: #ff0066;
+            /* Neon red button */
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s, box-shadow 0.3s;
+            margin: 5px;
+            border-radius: 5px;
+            display: inline-block;
+        }
+
+        button:hover {
+            background-color: #00ff00;
+            /* On hover, change to neon green */
+            box-shadow: 0 0 15px #00ff00;
+            /* Glow effect */
+        }
+
+        table tr:hover {
+            background-color: rgba(255, 0, 102, 0.1);
+            /* Light red highlight on hover */
+        }
+
+        /* Smooth transitions */
+        a {
+            color: #00ffff;
+            /* Neon cyan links */
+            text-decoration: none;
+            transition: color 0.3s, text-shadow 0.3s;
+        }
+
+        a:hover {
+            color: #ff0066;
+            text-shadow: 0 0 8px #ff0066;
+        }
+
+        /* Scrollbar customization for hacking style */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #1a1a1a;
+            /* Dark track */
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #ff0066;
+            /* Neon thumb */
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00ff00;
+            /* Neon green on hover */
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Admin Dashboard</h1>
+
+    <h2>Users List</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>User ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="users-table">
+            <% users.forEach(function(user) { %>
+                <tr id="user-<%= user.user_id %>">
+                    <td>
+                        <%= user.user_id %>
+                    </td>
+                    <td>
+                        <%= user.name %>
+                    </td>
+                    <td>
+                        <%= user.email %>
+                    </td>
+                    <td><button class="delete-user" data-id="<%= user.user_id %>">Delete</button></td>
+                </tr>
+                <% }); %>
+        </tbody>
+    </table>
+
+    <h2>Hospitals List</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Hospital ID</th>
+                <th>Hospital Name</th>
+                <th>Location</th>
+                <th>Contact</th>
+                <th>Email</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="hospitals-table">
+            <% hospitals.forEach(function(hospital) { %>
+                <tr id="hospital-<%= hospital.hospital_id %>">
+                    <td>
+                        <%= hospital.hospital_id %>
+                    </td>
+                    <td>
+                        <%= hospital.hospital_name %>
+                    </td>
+                    <td>
+                        <%= hospital.location %>
+                    </td>
+                    <td>
+                        <%= hospital.phone %>
+                    </td>
+                    <td>
+                        <%= hospital.email %>
+                    </td>
+                    <td><button class="delete-hospital" data-id="<%= hospital.hospital_id %>">Delete</button></td>
+                </tr>
+                <% }); %>
+        </tbody>
+    </table>
+
+    <h2>Vaccines List</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Vaccine ID</th>
+                <th>Vaccine Name</th>
+                <th>Manufacturer</th>
+                <th>Disease</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="vaccines-table">
+            <% vaccines.forEach(function(vaccine) { %>
+                <tr id="vaccine-<%= vaccine.vaccine_id %>">
+                    <td>
+                        <%= vaccine.vaccine_id %>
+                    </td>
+                    <td>
+                        <%= vaccine.vaccine_name %>
+                    </td>
+                    <td>
+                        <%= vaccine.manufacturer %>
+                    </td>
+                    <td>
+                        <%= vaccine.disease %>
+                    </td>
+                    <td><button class="delete-vaccine" data-id="<%= vaccine.vaccine_id %>">Delete</button></td>
+                </tr>
+                <% }); %>
+        </tbody>
+    </table>
+
+    <script>
+        $(document).ready(function () {
+            // Delete User
+            $('.delete-user').click(function () {
+                const userId = $(this).data('id');
+                $.ajax({
+                    url: '/admin/users/delete/' + userId,
+                    type: 'POST',
+                    success: function (result) {
+                        $('#user-' + userId).remove();
+                    },
+                    error: function (err) {
+                        alert('Error deleting user. Please try again.');
+                    }
+                });
+            });
+
+            // Delete Hospital
+            $('.delete-hospital').click(function () {
+                const hospitalId = $(this).data('id');
+                $.ajax({
+                    url: '/admin/hospitals/delete/' + hospitalId,
+                    type: 'POST',
+                    success: function (result) {
+                        $('#hospital-' + hospitalId).remove();
+                    },
+                    error: function (err) {
+                        alert('Error deleting hospital. Please try again.');
+                    }
+                });
+            });
+
+            // Delete Vaccine
+            $('.delete-vaccine').click(function () {
+                const vaccineId = $(this).data('id');
+                $.ajax({
+                    url: '/admin/vaccines/delete/' + vaccineId,
+                    type: 'POST',
+                    success: function (result) {
+                        $('#vaccine-' + vaccineId).remove();
+                    },
+                    error: function (err) {
+                        alert('Error deleting vaccine. Please try again.');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html> 

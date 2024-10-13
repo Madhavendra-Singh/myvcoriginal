@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospitals for Vaccine</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa;
+            overflow-x: hidden;
+        }
+
+        /* Navbar Styles */
+        .navbar {
+            background-color: #2e8b57;
+            padding: 15px 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .navbar li {
+            margin: 0 15px;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 15px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .navbar a:hover {
+            background-color: #ffcd3c;
+            border-radius: 5px;
+            transform: scale(1.05);
+        }
+
+        /* Main Container Styles */
+        .container {
+            max-width: 90%;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            border-radius: 25px;
+            animation: fadeIn 0.6s ease-in-out;
+            text-align: center;
+        }
+
+        /* Heading Styles */
+        h1 {
+            color: #2e8b57;
+            margin-top: 20px;
+        }
+
+        /* Form Styles */
+        form {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        label {
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        input {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 25px;
+            width: 300px;
+            transition: border-color 0.3s ease;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #2e8b57;
+        }
+
+        button {
+            background-color: #ffcd3c;
+            color: #2e8b57;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            font-size: 1em;
+            margin-left: 10px;
+        }
+
+        button:hover {
+            background-color: #ffb320;
+            transform: scale(1.05);
+        }
+
+        /* Hospitals List Styles */
+        .hospitals-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .hospital-card {
+            background-color: #ecf0f1;
+            border-radius: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            overflow: hidden;
+        }
+
+        .hospital-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .hospital-img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 15px;
+            margin-bottom: 15px;
+        }
+
+        /* Animation */
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <ul>
+            <li><a href="/vaccines">Home</a></li>
+            <li><a href="/my-appointments">Appointments</a></li>
+            <li><a href="/notifications">Notifications</a></li>
+            <li><a href="/profile">Profile</a></li>
+            <li><a href="/insurance">Insurance</a></li>
+            <li><a href="/vaccine-info">Vaccine Awareness</a></li>
+            <li><a href="/logout">Logout</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <h1>Hospitals Offering This Vaccine</h1>
+
+        <!-- Filter Form -->
+        <form method="GET" action="/vaccines/<%= vaccineId %>/hospitals">
+            <label for="city">Filter by City:</label>
+            <input type="text" id="city" name="city" placeholder="Enter city" required>
+            <button type="submit">Filter</button>
+        </form>
+
+        <!-- Hospitals List -->
+        <div class="hospitals-list">
+            <% hospitals.forEach(hospital=> { %>
+                <div class="hospital-card">
+                    <img src="<%= hospital.image_url %>" alt="<%= hospital.hospital_name %> image"
+                        onerror="this.src='/images/default-hospital-icon.png';" class="hospital-img">
+                    <strong>
+                        <%= hospital.hospital_name %>
+                    </strong>
+                    <p>Location: <%= hospital.location %>
+                    </p>
+                    <p>Phone: <%= hospital.phone %>
+                    </p>
+                    <a href="/hospitals/<%= hospital.hospital_id %>/doctors"
+                        style="color: #2e8b57; font-weight: bold;">View Doctors</a>
+                </div>
+                <% }); %>
+        </div>
+
+    </div>
+</body>
+
+</html>

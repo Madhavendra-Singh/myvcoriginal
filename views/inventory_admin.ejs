@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory</title>
+    <link rel="stylesheet" href="/styles.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            background: #f4f8ff;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        h1 {
+            color: #4caf50;
+            text-align: center;
+            margin-top: 20px;
+            transition: color 0.3s ease;
+        }
+
+        h1:hover {
+            color: #388e3c;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background: #ffffff;
+        }
+
+        th,
+        td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #eaeaea;
+            transition: background-color 0.3s ease;
+        }
+
+        th {
+            background-color: #4caf50;
+            color: white;
+        }
+
+        th:hover,
+        td:hover {
+            background-color: #e8f5e9;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        label {
+            margin-right: 10px;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="date"],
+        textarea,
+        input[type="file"] {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 25px;
+            width: calc(100% - 20px);
+            margin-bottom: 10px;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        input[type="date"]:focus,
+        textarea:focus {
+            border-color: #4caf50;
+            outline: none;
+        }
+
+        button {
+            background-color: #4caf50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            font-size: 1em;
+        }
+
+        button:hover {
+            background-color: #388e3c;
+            transform: translateY(-2px);
+        }
+
+        nav {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        nav li {
+            margin: 0 10px;
+        }
+
+        nav a {
+            padding: 10px 15px;
+            border: 1px solid #ccc;
+            border-radius: 25px;
+            background-color: #f9f9f9;
+            text-decoration: none;
+            color: #333;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        nav a:hover {
+            background-color: #4caf50;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Inventory</h1>
+        <nav>
+            <ul>
+                <li><a href="/admin/inventory">Manage Inventory</a></li>
+                <li><a href="/admin/inventory/expired">View Expired Vaccines</a></li>
+                <li><a href="/admin/reviews">Reviews</a></li>
+                <li><a href="/logout">Logout</a></li>
+            </ul>
+        </nav>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Vaccine Name</th>
+                    <th>Stock Quantity</th>
+                    <th>Expiry Date</th>
+                    <th>Notes</th>
+                    <th>Vaccine Image</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="inventory-table-body">
+                <% inventory.forEach(item=> { %>
+                    <tr id="row-<%= item.inventory_id %>">
+                        <td>
+                            <%= item.vaccine_name %>
+                        </td>
+                        <td>
+                            <%= item.stock_quantity %>
+                        </td>
+                        <td>
+                            <%= new Date(item.expiry_date).toLocaleDateString() %>
+                        </td>
+                        <td>
+                            <%= item.notes || 'N/A' %>
+                        </td> <!-- Display notes or 'N/A' if not available -->
+                        <td>
+                            <% if (item.vaccine_image) { %>
+                                <img src="/uploads/<%= item.vaccine_image %>" alt="<%= item.vaccine_name %>"
+                                    style="width: 100px; height: auto;">
+                                <% } else { %>
+                                    No Image
+                                    <% } %>
+                        </td>
+                        <td>
+                            <form class="update-form" data-inventory-id="<%= item.inventory_id %>">
+                                <input type="number" name="quantity" min="0" required placeholder="New Quantity">
+                                <button type="submit">Update</button>
+                            </form>
+                            <button class="remove-button" data-inventory-id="<%= item.inventory_id %>">Remove</button>
+                        </td>
+                    </tr>
+                    <% }) %>
+            </tbody>
+        </table>
+
+        <h2>Add New Vaccine</h2>
+        <form action="/admin/inventory/add" method="post" enctype="multipart/form-data">
+            <input type="text" name="vaccine_name" placeholder="Vaccine Name" required>
+            <input type="text" name="vaccine_type" placeholder="Vaccine Type" required>
+            <input type="number" name="stock_quantity" placeholder="Stock Quantity" required>
+            <input type="date" name="expiry_date" required>
+            <textarea name="notes" placeholder="Notes"></textarea>
+            <input type="file" name="vaccine_image">
+            <button type="submit">Add Vaccine</button>
+        </form>
+
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            // Handle update form submission
+            $('.update-form').submit(function (event) {
+                event.preventDefault();
+
+                const inventoryId = $(this).data('inventory-id');
+                const quantity = $(this).find('input[name="quantity"]').val();
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/admin/inventory/update',
+                    data: { inventory_id: inventoryId, quantity: quantity },
+                    success: function (response) {
+                        alert('Stock updated successfully!');
+                        $('#row-' + inventoryId).find('td:eq(1)').text(quantity);
+                    },
+                    error: function (xhr) {
+                        alert(xhr.responseText);
+                    }
+                });
+            });
+
+            // Handle remove button click
+            $('.remove-button').click(function () {
+                const inventoryId = $(this).data('inventory-id');
+
+                if (confirm('Are you sure you want to remove this vaccine?')) {
+                    $.ajax({
+                        type: 'POST',
+                        url: '/admin/inventory/remove',
+                        data: { inventory_id: inventoryId },
+                        success: function (response) {
+                            alert('Vaccine removed successfully!');
+                            $('#row-' + inventoryId).remove();
+                        },
+                        error: function (xhr) {
+                            alert(xhr.responseText);
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

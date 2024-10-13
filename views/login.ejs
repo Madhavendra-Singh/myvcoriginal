@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - VaccineConnect</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        /* Background styling similar to PharmEasy */
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #00c9ff, #92fe9d);
+            font-family: 'Poppins', sans-serif;
+            color: #333;
+        }
+
+        /* Login container with new design */
+        .login-container {
+            background-color: #fff;
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0px 15px 30px rgba(0, 0, 0, 0.2);
+            width: 450px;
+            max-width: 95%;
+            border: none;
+            position: relative;
+            text-align: center;
+            animation: fadeIn 1.5s ease-in-out;
+        }
+
+        h1 {
+            font-size: 2.8em;
+            color: #00897b;
+            margin-bottom: 40px;
+        }
+
+        label {
+            display: block;
+            font-size: 1.2em;
+            margin: 10px 0;
+            color: #555;
+            text-align: left;
+        }
+
+        input {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 25px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 1em;
+            background-color: #f5f5f5;
+            transition: border-color 0.3s ease, background-color 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #00897b;
+            background-color: #fff;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            background-color: #00897b;
+            color: #fff;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #00695c;
+        }
+
+        p {
+            font-size: 1.1em;
+            color: #666;
+        }
+
+        a {
+            color: #ff5722;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: #ff784e;
+        }
+
+        /* Vaccine-related imagery */
+        .vaccine-image {
+            position: absolute;
+            top: -80px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRC2QhpsNiPnryzXcJ96azYwKlhOMRXMQG4gQ&s') no-repeat center;
+            background-size: cover;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Warning message styling */
+        .warning {
+            color: red;
+            margin-bottom: 20px;
+            font-size: 1.1em;
+        }
+
+        /* Subtle animation for form container */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login-container">
+        <div class="vaccine-image"></div> <!-- Vaccine-related image -->
+
+        <h1>Login</h1>
+
+        <% if (typeof warning !=='undefined' ) { %>
+            <p class="warning">
+                <%= warning %>
+            </p>
+            <% } %>
+
+                <form action="/login" method="POST">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" required>
+
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password" required>
+
+                    <button type="submit">Login</button>
+                </form>
+
+                <p>Don't have an account? <a href="/register">Register here</a>.</p>
+    </div>
+</body>
+
+</html>

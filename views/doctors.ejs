@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctors</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+        }
+
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            background-color: #2e8b57;
+            display: flex;
+            justify-content: center;
+            padding: 10px;
+        }
+
+        nav ul li {
+            margin: 0 20px;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        nav ul li a:hover {
+            color: #ffcd3c;
+        }
+
+        .container {
+            width: 90%;
+            margin: auto;
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        h1 {
+            color: #2e8b57;
+            font-weight: 600;
+            margin-bottom: 30px;
+        }
+
+        /* Doctors List Styling */
+        #doctorList {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 30px;
+            padding: 20px;
+        }
+
+        #doctorList li {
+            list-style-type: none;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            overflow: hidden;
+            animation: fadeIn 1s ease;
+        }
+
+        #doctorList li:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        #doctorList li img {
+            width: 100%;
+            height: 200px;
+            /* You can adjust the height as needed */
+            object-fit: contain;
+            /* Ensures the whole image is visible */
+            border-radius: 10px 10px 0 0;
+        }
+
+        #doctorList li a {
+            display: block;
+            padding: 20px;
+            text-align: center;
+            color: #2e8b57;
+            font-weight: 600;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        #doctorList li a:hover {
+            color: #ffb320;
+        }
+
+        #doctorList li p {
+            padding: 0 20px 20px;
+            color: #555;
+        }
+
+        /* Add animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .container,
+        #doctorList li {
+            animation: fadeIn 1s ease;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav>
+        <ul>
+            <li><a href="/vaccines">Home</a></li>
+            <li><a href="/my-appointments">Appointments</a></li>
+            <li><a href="/notifications">Notifications</a></li>
+            <li><a href="/profile">Profile</a></li>
+            <li><a href="/insurance">Insurance</a></li>
+            <li><a href="/vaccine-info">Vaccine Awareness</a></li>
+            <li><a href="/logout">Logout</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <h1>Available Doctors</h1>
+
+        <!-- Doctors List -->
+        <ul id="doctorList">
+            <% doctors.forEach(doctor=> { %>
+                <li>
+                    <img src="<%= doctor.image_url %>" alt="<%= doctor.doctor_name %>">
+                    <!-- Access image_url from DB -->
+                    <a href="/hospitals/<%= hospitalId %>/doctors/<%= doctor.doctor_id %>">
+                        <%= doctor.doctor_name %> - <%= doctor.specialization %>
+                    </a>
+                    <p>Specialization: <%= doctor.specialization %>
+                    </p>
+                </li>
+                <% }); %>
+        </ul>
+    </div>
+</body>
+
+</html>

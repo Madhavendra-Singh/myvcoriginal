@@ -1,0 +1,132 @@
+Table "appointments" {
+  "appointment_id" int4 [pk, not null, increment]
+  "user_id" int4
+  "doctor_id" int4
+  "vaccine_id" int4
+  "hospital_id" int4
+  "appointment_date" timestamp [not null]
+  "status" varchar(20)
+  "created_at" timestamp [default: `CURRENT_TIMESTAMP`]
+  "updated_at" timestamp [default: `CURRENT_TIMESTAMP`]
+
+  Indexes {
+    (user_id, doctor_id, vaccine_id, hospital_id, appointment_date) [type: btree, name: "appointments_user_id_doctor_id_vaccine_id_hospital_id_appoi_key"]
+  }
+}
+
+Table "doctors" {
+  "doctor_id" int4 [pk, not null, increment]
+  "doctor_name" varchar(100) [not null]
+  "hospital_id" int4
+  "specialization" varchar(100)
+  "experience_years" int4
+  "contact" varchar(15)
+  "created_at" timestamp [default: `CURRENT_TIMESTAMP`]
+  "updated_at" timestamp [default: `CURRENT_TIMESTAMP`]
+
+  Indexes {
+    (doctor_name, hospital_id) [type: btree, name: "doctors_doctor_name_hospital_id_key"]
+  }
+}
+
+Table "hospitals" {
+  "hospital_id" int4 [pk, not null, increment]
+  "hospital_name" varchar(100) [not null]
+  "location" varchar(100) [not null]
+  "phone" varchar(15)
+  "email" varchar(100)
+  "hospital_admin_id" int4
+  "created_at" timestamp [default: `CURRENT_TIMESTAMP`]
+  "updated_at" timestamp [default: `CURRENT_TIMESTAMP`]
+}
+
+Table "insurance_details" {
+  "insurance_id" int4 [pk, not null, increment]
+  "user_id" int4
+  "insurance_provider" varchar(100)
+  "policy_number" varchar(100)
+  "coverage_amount" numeric(10,2)
+  "expiry_date" date
+  "created_at" timestamp [default: `CURRENT_TIMESTAMP`]
+}
+
+Table "notifications" {
+  "notification_id" int4 [pk, not null, increment]
+  "user_id" int4
+  "message" text
+  "sent_at" timestamp [default: `CURRENT_TIMESTAMP`]
+  "status" varchar(20)
+}
+
+Table "reviews" {
+  "review_id" int4 [pk, not null, increment]
+  "user_id" int4
+  "hospital_id" int4
+  "doctor_id" int4
+  "rating" int4
+  "review_text" text
+  "created_at" timestamp [default: `CURRENT_TIMESTAMP`]
+  "appointment_id" int4
+}
+
+Table "users" {
+  "user_id" int4 [pk, not null, increment]
+  "username" varchar(50) [unique, not null]
+  "password" varchar(255) [not null]
+  "email" varchar(100) [unique, not null]
+  "role" varchar(20) [not null]
+  "phone" varchar(15)
+  "address" text
+  "age" int4
+  "emergency_contact" varchar(50)
+  "created_at" timestamp [default: `CURRENT_TIMESTAMP`]
+  "updated_at" timestamp [default: `CURRENT_TIMESTAMP`]
+  "hospital_admin_id" int4
+}
+
+Table "vaccination_history" {
+  "history_id" int4 [pk, not null, increment]
+  "user_id" int4
+  "vaccine_id" int4
+  "date_administered" date
+  "hospital_id" int4
+  "doctor_id" int4
+  "created_at" timestamp [default: `CURRENT_TIMESTAMP`]
+
+  Indexes {
+    (user_id, vaccine_id, hospital_id, doctor_id, date_administered) [type: btree, name: "vaccination_history_user_id_vaccine_id_hospital_id_doctor_i_key"]
+  }
+}
+
+Table "vaccine_information" {
+  "info_id" int4 [pk, not null, increment]
+  "vaccine_id" int4
+  "how_it_works" text
+  "side_effects" text
+  "precautions" text
+  "effectiveness" varchar(100)
+  "created_at" timestamp [default: `CURRENT_TIMESTAMP`]
+}
+
+Table "vaccine_inventory" {
+  "inventory_id" int4 [pk, not null, increment]
+  "hospital_id" int4
+  "vaccine_id" int4
+  "stock_quantity" int4
+  "last_updated" timestamp [default: `CURRENT_TIMESTAMP`]
+  "expiry_date" date
+
+  Indexes {
+    (hospital_id, vaccine_id) [type: btree, name: "vaccine_inventory_hospital_id_vaccine_id_key"]
+  }
+}
+
+Table "vaccines" {
+  "vaccine_id" int4 [pk, not null, increment]
+  "vaccine_name" varchar(100) [not null]
+  "vaccine_type" varchar(100) [not null]
+  "manufacturer" varchar(100)
+  "description" text
+  "created_at" timestamp [default: `CURRENT_TIMESTAMP`]
+  "updated_at" timestamp [default: `CURRENT_TIMESTAMP`]
+}

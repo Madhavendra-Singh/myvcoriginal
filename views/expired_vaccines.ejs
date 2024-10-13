@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expired Vaccines</title>
+    <link rel="stylesheet" href="/styles.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #e8f5e9, #ffffff);
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        h1 {
+            color: #4caf50;
+            /* Primary green color */
+            text-align: center;
+            margin-top: 20px;
+            animation: fadeIn 1s ease;
+        }
+
+        table {
+            width: 90%;
+            border-collapse: collapse;
+            margin: 20px auto;
+            background-color: #fff;
+            box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            animation: slideIn 1s ease;
+        }
+
+        th,
+        td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #4caf50;
+            /* Header green */
+            color: white;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        th:hover {
+            background-color: #388e3c;
+            /* Darker green on hover */
+        }
+
+        tr:hover {
+            background-color: #f1f8e9;
+            /* Light green on row hover */
+            transition: background-color 0.3s ease;
+        }
+
+        nav {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        nav li {
+            margin: 0 10px;
+        }
+
+        nav a {
+            padding: 10px 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            /* Light background for links */
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        nav a:hover {
+            background-color: #4caf50;
+            /* Link hover background */
+            color: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        footer a {
+            color: #4caf50;
+            /* Footer link color */
+            text-decoration: none;
+            font-weight: bold;
+            transition: text-decoration 0.3s ease;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Expired Vaccines</h1>
+    <nav>
+        <ul>
+            <li><a href="/admin/inventory">Manage Inventory</a></li>
+            <li><a href="/admin/inventory/expired">View Expired Vaccines</a></li>
+            <li><a href="/admin/reviews">Reviews</a></li>
+            <li><a href="/logout">Logout</a></li>
+        </ul>
+    </nav>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Vaccine Name</th>
+                <th>Stock Quantity</th>
+                <th>Expiry Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% expiredVaccines.forEach(item=> { %>
+                <tr>
+                    <td>
+                        <%= item.vaccine_name %>
+                    </td>
+                    <td>
+                        <%= item.stock_quantity %>
+                    </td>
+                    <td>
+                        <%= item.expiry_date.toDateString() %>
+                    </td>
+                </tr>
+                <% }) %>
+        </tbody>
+    </table>
+
+    <footer>
+        <p>&copy; 2024 Your Company Name | <a href="/privacy">Privacy Policy</a></p>
+    </footer>
+</body>
+
+</html>

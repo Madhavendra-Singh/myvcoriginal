@@ -1,0 +1,259 @@
+<!-- views/my-appointments.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Appointments</title>
+    <link rel="stylesheet" href="/styles.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #e3f2fd, #fff);
+            color: #333;
+            overflow-x: hidden;
+            height: 100vh;
+        }
+
+        nav {
+            width: 100%;
+            background-color: #2e8b57;
+            /* Updated Nav Color */
+            padding: 15px 0;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        nav ul {
+            display: flex;
+            justify-content: center;
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        nav ul li {
+            margin: 0 20px;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.1em;
+            transition: color 0.3s ease;
+        }
+
+        nav ul li a:hover {
+            color: #ffcd3c;
+            /* Updated Hover Color */
+        }
+
+        h1 {
+            color: #2e8b57;
+            /* Updated Heading Color */
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ccc;
+        }
+
+        th {
+            background-color: #2e8b57;
+            /* Updated Table Header Color */
+            color: white;
+            font-weight: bold;
+        }
+
+        .vaccine-image {
+            width: 60px;
+            /* Adjust as necessary */
+            height: 60px;
+            /* Adjust as necessary */
+            border-radius: 5px;
+            object-fit: cover;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        button {
+            background-color: #2e8b57;
+            /* Updated Button Color */
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-size: 1em;
+            flex: 1;
+            margin: 0 10px;
+        }
+
+        button:hover {
+            background-color: #145ab6;
+            /* Updated Hover Color */
+        }
+
+        input[type="datetime-local"] {
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1em;
+            width: 100%;
+            transition: border 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        input[type="datetime-local"]:focus {
+            border: 1px solid #2e8b57;
+            /* Updated Focus Color */
+            box-shadow: 0 0 5px rgba(46, 139, 87, 0.5);
+            outline: none;
+        }
+
+        @media (max-width: 768px) {
+            button {
+                margin: 5px 0;
+            }
+
+            input[type="datetime-local"] {
+                margin-bottom: 10px;
+                /* Adding margin for better spacing */
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation Bar -->
+    <nav>
+        <ul>
+            <li><a href="/vaccines">Home</a></li>
+            <li><a href="/my-appointments">Appointments</a></li>
+            <li><a href="/notifications">Notifications</a></li>
+            <li><a href="/profile">Profile</a></li>
+            <li><a href="/insurance">Insurance</a></li>
+            <li><a href="/vaccine-info">Vaccine Awareness</a></li>
+            <li><a href="/logout">Logout</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container">
+        <h1>My Appointments</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Appointment ID</th>
+                    <th>Vaccine</th>
+                    <th>Image</th> <!-- Added Image Column -->
+                    <th>Hospital</th>
+                    <th>Doctor</th>
+                    <th>Date & Time</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% appointments.forEach(appointment=> { %>
+                    <tr>
+                        <td>
+                            <%= appointment.appointment_id %>
+                        </td>
+                        <td>
+                            <%= appointment.vaccine_name %>
+                        </td>
+                        <td>
+                            <img src="<%= appointment.vaccine_image_url %>" alt="<%= appointment.vaccine_name %>"
+                                class="vaccine-image"> <!-- Vaccine Image -->
+                        </td>
+                        <td>
+                            <%= appointment.hospital_name %>
+                        </td>
+                        <td>
+                            <%= appointment.doctor_name %>
+                        </td>
+                        <td>
+                            <%= new Date(appointment.appointment_date).toLocaleString() %>
+                        </td>
+                        <td>
+                            <%= appointment.status %>
+                        </td>
+                        <td>
+                            <!-- Reschedule Form -->
+                            <form action="/reschedule-appointment" method="POST" style="display:inline;">
+                                <input type="hidden" name="appointment_id" value="<%= appointment.appointment_id %>">
+                                <input type="datetime-local" name="new_appointment_date" required>
+                                <button type="submit">Reschedule</button>
+                            </form>
+                            <!-- Cancel Form -->
+                            <% if (appointment && appointment.appointment_id) { %>
+                                <form action="/cancel-appointment/<%= appointment.appointment_id %>" method="POST"
+                                    style="display:inline;">
+                                    <button type="submit">Cancel</button>
+                                </form>
+                                <% } else { %>
+                                    <p>Appointment ID not found.</p>
+                                    <% } %>
+                        </td>
+                    </tr>
+                    <% }); %>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Attach event listeners to form submissions for cancel and reschedule buttons
+        document.querySelectorAll('form').forEach(form => {
+            form.addEventListener('submit', function (event) {
+                event.preventDefault();
+                const formAction = form.getAttribute('action');
+
+                // Submit the form via POST
+                fetch(formAction, {
+                    method: 'POST',
+                    body: new FormData(form)
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            // Reload the page on successful response
+                            window.location.reload();
+                        } else {
+                            alert('There was an error. Please try again.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+            });
+        });
+    </script>
+
+</body>
+
+</html>
