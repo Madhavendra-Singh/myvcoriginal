@@ -372,7 +372,7 @@ app.get('/hospitals/:hospitalId/doctors/:doctorId', async (req, res) => {
 });
 
 
-app.post('/create-checkout-session', async (req, res) => {
+app.post('/create-appointment', async (req, res) => {
     // Check if the user is logged in
     if (!req.session.user) {
         return res.redirect('/login');
@@ -381,65 +381,18 @@ app.post('/create-checkout-session', async (req, res) => {
     const { vaccine_id, hospital_id, doctor_id, appointment_date, appointment_time } = req.body;
     const userId = req.session.user.user_id;
 
-    // Fetch the price of the vaccine from the inventory
-    const priceQuery = 
-        SELECT price FROM Vaccine_Inventory 
-        WHERE vaccine_id = $1 AND hospital_id = $2
-    ;
-
-    try {
-        const priceResult = await pool.query(priceQuery, [vaccine_id, hospital_id]);
-        if (priceResult.rows.length === 0) {
-            return res.status(400).send('Vaccine not found for this hospital.');
-        }
-
-        const price = priceResult.rows[0].price; // Assume price is in INR (Rupees)
-
-        // Create a new Stripe Checkout session
-        const session = await stripe.checkout.sessions.create({
-            payment_method_types: ['card'],
-            line_items: [{
-                price_data: {
-                    currency: 'inr', // Use INR for Indian Rupees
-                    product_data: {
-                        name: Vaccine Appointment for ${vaccine_id},
-                        description: Appointment at Hospital ID: ${hospital_id} with Doctor ID: ${doctor_id},
-                    },
-                    unit_amount: price * 100, // Convert Rupees to paise (smallest unit)
-                },
-                quantity: 1,
-            }],
-            mode: 'payment',
-            successUrl = ${process.env.BASE_URL}/success?appointment_date=${encodeURIComponent(appointmentDate)}&appointment_time=${encodeURIComponent(appointmentTime)}&doctor_id=${encodeURIComponent(doctorId)}&hospital_id=${encodeURIComponent(hospitalId)}&vaccine_id=${encodeURIComponent(vaccineId)};
-            cancel_url: 'http://localhost:3000/vaccines?payment_failed=true',
-        });
-
-        res.redirect(303, session.url);
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Error creating checkout session');
-    }
-});
-
-app.get('/success', async (req, res) => {
-    const { appointment_date, appointment_time, doctor_id, hospital_id, vaccine_id } = req.query;
-
-    // Validate the parameters here...
-
-    const userId = req.session.user.user_id;
-
     // Create appointment and other necessary database updates
-    const selectedDateTime = new Date(${appointment_date}T${appointment_time});
+    const selectedDateTime = new Date(`${appointment_date}T${appointment_time}`);
     
     try {
         await pool.query('BEGIN');
 
         // Insert the appointment into the database
-        const appointmentInsertQuery = 
+        const appointmentInsertQuery = `
             INSERT INTO Appointments (user_id, doctor_id, vaccine_id, hospital_id, appointment_date, status) 
             VALUES ($1, $2, $3, $4, $5, 'confirmed')
             RETURNING appointment_id;
-        ;
+        `;
         const appointmentResult = await pool.query(appointmentInsertQuery, [userId, doctor_id, vaccine_id, hospital_id, selectedDateTime]);
         const appointment_id = appointmentResult.rows[0].appointment_id;
 
@@ -448,13 +401,48 @@ app.get('/success', async (req, res) => {
         await pool.query('COMMIT');
 
         // Redirect to review page with appointment_id
-        res.redirect(/review?appointment_id=${appointment_id});
+        res.redirect(`/review?appointment_id=${appointment_id}`);
     } catch (error) {
         await pool.query('ROLLBACK');
         console.error(error);
         res.status(500).send('Error processing appointment');
     }
 });
+
+app.get('/success', async (req, res) => {
+    const { appointment_date, appointment_time, doctor_id, hospital_id, vaccine_id } = req.query;
+
+    // Validate the parameters here...
+    const userId = req.session.user.user_id;
+
+    // Create appointment and other necessary database updates
+    const selectedDateTime = new Date(`${appointment_date}T${appointment_time}`);
+    
+    try {
+        await pool.query('BEGIN');
+
+        // Insert the appointment into the database
+        const appointmentInsertQuery = `
+            INSERT INTO Appointments (user_id, doctor_id, vaccine_id, hospital_id, appointment_date, status) 
+            VALUES ($1, $2, $3, $4, $5, 'confirmed')
+            RETURNING appointment_id;
+        `;
+        const appointmentResult = await pool.query(appointmentInsertQuery, [userId, doctor_id, vaccine_id, hospital_id, selectedDateTime]);
+        const appointment_id = appointmentResult.rows[0].appointment_id;
+
+        // Optionally update vaccine inventory here if needed...
+
+        await pool.query('COMMIT');
+
+        // Redirect to review page with appointment_id
+        res.redirect(`/review?appointment_id=${appointment_id}`);
+    } catch (error) {
+        await pool.query('ROLLBACK');
+        console.error(error);
+        res.status(500).send('Error processing appointment');
+    }
+});
+
 
 
 
