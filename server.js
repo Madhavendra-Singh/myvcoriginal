@@ -14,14 +14,9 @@ const bcrypt = require('bcryptjs'); // If you're using hashed passwords
 const app = express();
 const PORT = 3000;
 
-// PostgreSQL setup
 const pool = new Pool({
-    user: 'madhav',
-    host: 'localhost',
-    database: 'vaccine',
-    password: 'madhav',
-    port: 5432,
-});
+    connectionString: process.env.POSTGRES_URL,
+  })
 
 const uploadDir = path.join(__dirname, 'uploads');
 
