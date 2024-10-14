@@ -596,15 +596,25 @@ app.get('/notifications', async (req, res) => {
         // Fetch notifications
         const result = await pool.query(notificationsQuery, [userId]);
 
+        // Log the results to verify
+        console.log("Fetched notifications:", result.rows);
+
+        // If no notifications are found, send an empty array to the template
+        if (result.rows.length === 0) {
+            return res.render('notifications', { notifications: [] });
+        }
+
         // Mark notifications as read
         await pool.query(markAsReadQuery, [userId]);
 
+        // Render the notifications view with fetched notifications
         res.render('notifications', { notifications: result.rows });
     } catch (error) {
-        console.error(error);
+        console.error("Error fetching notifications:", error);
         res.status(500).send('Error fetching notifications');
     }
 });
+
 
 
 app.get('/review', async (req, res) => {
