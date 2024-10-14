@@ -11,16 +11,18 @@
             margin: 0;
             padding: 0;
             font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #e8f5e9, #ffffff);
+            background: linear-gradient(135deg, #e3f2fd, #fff);
             color: #333;
             overflow-x: hidden;
             height: 100vh;
+            /* Set body height */
             overflow-y: auto;
+            /* Allow vertical scrolling */
         }
 
         nav {
             width: 100%;
-            background-color: #2E7D32;
+            background-color: #1a73e8;
             padding: 15px 0;
             box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
         }
@@ -45,11 +47,11 @@
         }
 
         nav ul li a:hover {
-            color: #A5D6A7;
+            color: #ffcc00;
         }
 
         h1 {
-            color: #2E7D32;
+            color: #1a73e8;
             text-align: center;
             margin-top: 20px;
         }
@@ -58,7 +60,7 @@
             max-width: 1200px;
             margin: 20px auto;
             padding: 20px;
-            background-color: #ffffff;
+            background-color: #fff;
             box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.1);
             border-radius: 10px;
         }
@@ -69,24 +71,27 @@
             margin-top: 20px;
         }
 
-        th, td {
+        th,
+        td {
             padding: 12px;
             text-align: left;
             border: 1px solid #ccc;
         }
 
         th {
-            background-color: #2E7D32;
+            background-color: #1a73e8;
             color: white;
             font-weight: bold;
         }
 
         .unread {
-            background-color: #FFEBEE;
+            background-color: #f8d7da;
+            /* Light red for unread */
         }
 
         .delivered {
-            background-color: #C8E6C9;
+            background-color: #d4edda;
+            /* Light green for delivered */
         }
 
         .no-notifications {
@@ -103,7 +108,7 @@
         }
 
         button {
-            background-color: #2E7D32;
+            background-color: #1a73e8;
             color: white;
             padding: 12px 20px;
             border: none;
@@ -116,7 +121,7 @@
         }
 
         button:hover {
-            background-color: #1B5E20;
+            background-color: #145ab6;
         }
 
         @media (max-width: 768px) {
@@ -146,7 +151,7 @@
         <h1>Your Notifications</h1>
 
         <!-- Check if there are notifications -->
-        <% if (notifications.length > 0) { %>
+        <% if (notifications.length> 0) { %>
             <table>
                 <thead>
                     <tr>
@@ -156,18 +161,24 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <% notifications.forEach(notification => { %>
+                    <% notifications.forEach(notification=> { %>
                         <tr class="<%= notification.status === 'pending' ? 'unread' : 'delivered' %>">
-                            <td><%= notification.message %></td>
-                            <td><%= new Date(notification.sent_at).toLocaleString() %></td>
-                            <td><%= notification.status === 'sent' ? 'Delivered' : 'Unread' %></td>
+                            <td>
+                                <%= notification.message %>
+                            </td>
+                            <td>
+                                <%= new Date(notification.sent_at).toLocaleString() %>
+                            </td>
+                            <td>
+                                <%= notification.status==='sent' ? 'Delivered' : 'Unread' %>
+                            </td>
                         </tr>
-                    <% }); %>
+                        <% }); %>
                 </tbody>
             </table>
-        <% } else { %>
-            <p class="no-notifications">No notifications available.</p>
-        <% } %>
+            <% } else { %>
+                <p class="no-notifications">No notifications available.</p>
+                <% } %>
 
     </div>
 </body>
