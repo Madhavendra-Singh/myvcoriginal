@@ -6,144 +6,132 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Appointments</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/styles.css">
     <style>
         body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
             margin: 0;
             padding: 0;
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #e3f2fd, #fff);
-            color: #333;
-            overflow-x: hidden;
-            height: 100vh;
         }
 
         nav {
-            width: 100%;
-            background-color: #2e8b57;
-            /* Updated Nav Color */
-            padding: 15px 0;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            background-color: #2b4f81;
+            padding: 1rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
         nav ul {
+            list-style: none;
             display: flex;
             justify-content: center;
-            list-style-type: none;
-            margin: 0;
             padding: 0;
+            margin: 0;
         }
 
         nav ul li {
-            margin: 0 20px;
+            margin: 0 15px;
         }
 
         nav ul li a {
-            color: white;
+            color: #fff;
             text-decoration: none;
-            font-size: 1.1em;
-            transition: color 0.3s ease;
+            font-weight: 600;
+            transition: color 0.3s;
         }
 
         nav ul li a:hover {
-            color: #ffcd3c;
-            /* Updated Hover Color */
-        }
-
-        h1 {
-            color: #2e8b57;
-            /* Updated Heading Color */
-            text-align: center;
-            margin-top: 20px;
+            color: #ffcc00;
         }
 
         .container {
             max-width: 1200px;
-            margin: 20px auto;
-            padding: 20px;
-            background-color: #fff;
-            box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
+            margin: 2rem auto;
+            padding: 1.5rem;
         }
 
-        table {
+        h1 {
+            text-align: center;
+            color: #2b4f81;
+            font-weight: 600;
+            margin-bottom: 30px;
+        }
+
+        .appointments-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+        }
+
+        .appointment-card {
+            background-color: #fff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            margin: 15px;
             width: 100%;
-            border-collapse: collapse;
+            max-width: 400px;
+            padding: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .appointment-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .appointment-details {
+            margin-bottom: 10px;
+        }
+
+        .appointment-details p {
+            margin: 5px 0;
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        .status {
+            margin-top: 10px;
+            font-weight: bold;
+            color: #2b4f81;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
             margin-top: 20px;
         }
 
-        th,
-        td {
-            padding: 12px;
-            text-align: left;
-            border: 1px solid #ccc;
+        .action-buttons form {
+            display: inline-block;
+            margin: 0;
         }
 
-        th {
-            background-color: #2e8b57;
-            /* Updated Table Header Color */
+        .action-buttons button {
+            background-color: #2b4f81;
             color: white;
-            font-weight: bold;
-        }
-
-        .vaccine-image {
-            width: 60px;
-            /* Adjust as necessary */
-            height: 60px;
-            /* Adjust as necessary */
-            border-radius: 5px;
-            object-fit: cover;
-        }
-
-        .button-container {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 30px;
-        }
-
-        button {
-            background-color: #2e8b57;
-            /* Updated Button Color */
-            color: white;
-            padding: 12px 20px;
             border: none;
+            padding: 10px 20px;
             border-radius: 5px;
             cursor: pointer;
             transition: background-color 0.3s ease;
-            font-size: 1em;
-            flex: 1;
-            margin: 0 10px;
         }
 
-        button:hover {
-            background-color: #145ab6;
-            /* Updated Hover Color */
+        .action-buttons button:hover {
+            background-color: #ffcc00;
         }
 
         input[type="datetime-local"] {
-            padding: 12px;
             border: 1px solid #ccc;
+            padding: 8px;
             border-radius: 5px;
-            font-size: 1em;
-            width: 100%;
-            transition: border 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        input[type="datetime-local"]:focus {
-            border: 1px solid #2e8b57;
-            /* Updated Focus Color */
-            box-shadow: 0 0 5px rgba(46, 139, 87, 0.5);
-            outline: none;
+            font-size: 0.9rem;
         }
 
         @media (max-width: 768px) {
-            button {
-                margin: 5px 0;
-            }
-
-            input[type="datetime-local"] {
-                margin-bottom: 10px;
-                /* Adding margin for better spacing */
+            .appointments-wrapper {
+                flex-direction: column;
+                align-items: center;
             }
         }
     </style>
@@ -166,94 +154,50 @@
     <!-- Main Container -->
     <div class="container">
         <h1>My Appointments</h1>
-        <table>
-            <thead>
-                <tr>
-                    <th>Appointment ID</th>
-                    <th>Vaccine</th>
-                    <th>Image</th> <!-- Added Image Column -->
-                    <th>Hospital</th>
-                    <th>Doctor</th>
-                    <th>Date & Time</th>
-                    <th>Status</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <% appointments.forEach(appointment=> { %>
-                    <tr>
-                        <td>
+
+        <div class="appointments-wrapper">
+            <% appointments.forEach(appointment=> { %>
+                <div class="appointment-card">
+                    <div class="appointment-details">
+                        <p><strong>Appointment ID:</strong>
                             <%= appointment.appointment_id %>
-                        </td>
-                        <td>
+                        </p>
+                        <p><strong>Vaccine:</strong>
                             <%= appointment.vaccine_name %>
-                        </td>
-                        <td>
-                            <img src="<%= appointment.vaccine_image_url %>" alt="<%= appointment.vaccine_name %>"
-                                class="vaccine-image"> <!-- Vaccine Image -->
-                        </td>
-                        <td>
+                        </p>
+                        <p><strong>Hospital:</strong>
                             <%= appointment.hospital_name %>
-                        </td>
-                        <td>
+                        </p>
+                        <p><strong>Doctor:</strong>
                             <%= appointment.doctor_name %>
-                        </td>
-                        <td>
+                        </p>
+                        <p><strong>Date & Time:</strong>
                             <%= new Date(appointment.appointment_date).toLocaleString() %>
-                        </td>
-                        <td>
+                        </p>
+                        <p class="status"><strong>Status:</strong>
                             <%= appointment.status %>
-                        </td>
-                        <td>
-                            <!-- Reschedule Form -->
-                            <form action="/reschedule-appointment" method="POST" style="display:inline;">
-                                <input type="hidden" name="appointment_id" value="<%= appointment.appointment_id %>">
-                                <input type="datetime-local" name="new_appointment_date" required>
-                                <button type="submit">Reschedule</button>
+                        </p>
+                    </div>
+
+                    <div class="action-buttons">
+                        <!-- Reschedule Form -->
+                        <form action="/reschedule-appointment" method="POST">
+                            <input type="hidden" name="appointment_id" value="<%= appointment.appointment_id %>">
+                            <input type="datetime-local" name="new_appointment_date" required>
+                            <button type="submit">Reschedule</button>
+                        </form>
+
+                        <!-- Cancel Form -->
+                        <% if (appointment && appointment.appointment_id) { %>
+                            <form action="/cancel-appointment/<%= appointment.appointment_id %>" method="POST">
+                                <button type="submit">Cancel</button>
                             </form>
-                            <!-- Cancel Form -->
-                            <% if (appointment && appointment.appointment_id) { %>
-                                <form action="/cancel-appointment/<%= appointment.appointment_id %>" method="POST"
-                                    style="display:inline;">
-                                    <button type="submit">Cancel</button>
-                                </form>
-                                <% } else { %>
-                                    <p>Appointment ID not found.</p>
-                                    <% } %>
-                        </td>
-                    </tr>
-                    <% }); %>
-            </tbody>
-        </table>
+                            <% } %>
+                    </div>
+                </div>
+                <% }); %>
+        </div>
     </div>
-
-    <script>
-        // Attach event listeners to form submissions for cancel and reschedule buttons
-        document.querySelectorAll('form').forEach(form => {
-            form.addEventListener('submit', function (event) {
-                event.preventDefault();
-                const formAction = form.getAttribute('action');
-
-                // Submit the form via POST
-                fetch(formAction, {
-                    method: 'POST',
-                    body: new FormData(form)
-                })
-                    .then(response => {
-                        if (response.ok) {
-                            // Reload the page on successful response
-                            window.location.reload();
-                        } else {
-                            alert('There was an error. Please try again.');
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                    });
-            });
-        });
-    </script>
-
 </body>
 
 </html>
