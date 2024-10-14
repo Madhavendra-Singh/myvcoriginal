@@ -536,12 +536,14 @@ app.post('/cancel-appointment/:appointmentId', async (req, res) => {
 
 // Reschedule Appointment Route
 app.post('/reschedule-appointment', async (req, res) => {
+    // Check if the user is logged in
     if (!req.session.user) {
         return res.redirect('/login');
     }
 
     const { appointment_id, new_appointment_date } = req.body;
 
+    // Check if the new appointment date is in the future
     const today = new Date();
     const selectedDate = new Date(new_appointment_date);
     
@@ -549,18 +551,20 @@ app.post('/reschedule-appointment', async (req, res) => {
         return res.send('Cannot reschedule to a past date.');
     }
 
-    try {
-        const updateQuery = `
-            UPDATE Appointments 
-            SET appointment_date = $1, updated_at = CURRENT_TIMESTAMP 
-            WHERE appointment_id = $2 AND user_id = $3
-        `;
-        await pool.query(updateQuery, [new_appointment_date, appointment_id, req.session.user.user_id]);
+    // Update the appointment date in the database
+    const updateQuery = `
+        UPDATE Appointments 
+        SET appointment_date = $1, updated_at = CURRENT_TIMESTAMP 
+        WHERE appointment_id = $2 AND user_id = $3
+    `;
 
-        res.redirect('/my-appointments'); // Reload page after reschedule
+
+    try {
+        await pool.query(updateQuery, [new_appointment_date, appointment_id, req.session.user.user_id]);
+        res.redirect('/my-appointments'); // Redirect back to appointments page
     } catch (error) {
         console.error(error);
-        res.status(500).send('Error rescheduling appointment');
+        res.send('Error rescheduling appointment');
     }
 });
 
